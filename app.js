@@ -29,13 +29,13 @@ const rand = (a,b) => a + Math.random()*(b-a);
 const setPhase = phase => { state.phase=phase; state.phaseTime=0; document.body.dataset.phase=phase; };
 
 // Read-only diagnostics used by the automated flow test.
-window.giftDemo = { get state() { return { phase:state.phase, phaseTime:state.phaseTime, fps:state.fps, mobile:lowPower, to:gift.to, triangles:renderer?.info.render.triangles, points:renderer?.info.render.points }; } };
+window.giftDemo = { freeze:()=>state.paused=true,resume:()=>{state.paused=false;last=performance.now();}, get state() { return { phase:state.phase, phaseTime:state.phaseTime, fps:state.fps, mobile:lowPower, to:gift.to, triangles:renderer?.info.render.triangles, points:renderer?.info.render.points }; } };
 
 async function init() {
   try {
     await document.fonts.load('32px StarSerif', '星河降临生日快乐');
-    renderer = new THREE.WebGLRenderer({ canvas:$('stage'), antialias:!lowPower, alpha:false, powerPreference:'high-performance' });
-    renderer.setPixelRatio(testQuality ? .75 : Math.min(devicePixelRatio, lowPower ? 1.5 : 2));
+    renderer = new THREE.WebGLRenderer({ canvas:$('stage'), antialias:!lowPower, alpha:false, powerPreference:'high-performance', preserveDrawingBuffer:testQuality });
+    renderer.setPixelRatio(testQuality ? .4 : Math.min(devicePixelRatio, lowPower ? 1.5 : 2));
     renderer.setSize(innerWidth, innerHeight);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -229,6 +229,7 @@ function resize(){
 }
 function animate(now){
   requestAnimationFrame(animate);
+  if(state.paused) {last=now;return;}
   let dt=Math.min(.05,(now-last)/1000);last=now;if(document.hidden)return;
   elapsed+=dt;state.time+=dt;state.phaseTime+=dt;
   const rawDt=(now-(state.lastFpsStamp||now-16.67))/1000;state.lastFpsStamp=now;
@@ -273,6 +274,7 @@ function animate(now){
     if(t>.38){galaxy.material.uniforms.uOpacity.value=Math.min(1,(t-.38)*.8);galaxy.userData.glow.material.opacity=Math.min(.48,(t-.38)*.4);}
     if(t>2.45){setPhase('galaxy');$('chapter').classList.remove('hidden');audio.galaxy();}
   }else if(state.phase==='galaxy'||state.phase==='name'||state.phase==='finale'){
+    fragments.forEach(m=>m.visible=false);if(state.explosion&&t>1)state.explosion.visible=false;
     $('flash').style.opacity='0';explosionLight.intensity=0;coreLight.intensity=0;
     if(state.explosion&&state.explosion.material.uniforms.uOpacity.value>0){state.explosion.material.uniforms.uTime.value+=dt;state.explosion.material.uniforms.uOpacity.value=Math.max(0,state.explosion.material.uniforms.uOpacity.value-dt*.5);}
     fragments.forEach(m=>{if(m.material.opacity>0){m.position.addScaledVector(m.userData.velocity,dt);m.material.opacity=Math.max(0,m.material.opacity-dt*1.4);}});
