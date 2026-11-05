@@ -274,20 +274,21 @@ function animate(now){
     if(t>.38){galaxy.material.uniforms.uOpacity.value=Math.min(1,(t-.38)*.8);galaxy.userData.glow.material.opacity=Math.min(.48,(t-.38)*.4);}
     if(t>2.45){setPhase('galaxy');$('chapter').classList.remove('hidden');audio.galaxy();}
   }else if(state.phase==='galaxy'||state.phase==='name'||state.phase==='finale'){
+    if(state.phase!=='galaxy')$('opening').classList.add('hidden');
     fragments.forEach(m=>m.visible=false);if(state.explosion&&t>1)state.explosion.visible=false;
     $('flash').style.opacity='0';explosionLight.intensity=0;coreLight.intensity=0;
     if(state.explosion&&state.explosion.material.uniforms.uOpacity.value>0){state.explosion.material.uniforms.uTime.value+=dt;state.explosion.material.uniforms.uOpacity.value=Math.max(0,state.explosion.material.uniforms.uOpacity.value-dt*.5);}
     fragments.forEach(m=>{if(m.material.opacity>0){m.position.addScaledVector(m.userData.velocity,dt);m.material.opacity=Math.max(0,m.material.opacity-dt*1.4);}});
     if(shockwave)shockwave.visible=false;
     const p=Math.min(1,t/5);
-    galaxy.material.uniforms.uOpacity.value=Math.min(1,t*.7);galaxy.userData.glow.material.opacity=Math.min(.5,t*.25);
+    galaxy.material.uniforms.uOpacity.value=(state.phase==='galaxy'?Math.min(1,t*.7):Math.max(.17,1-state.phaseTime*.52));galaxy.userData.glow.material.opacity=(state.phase==='galaxy'?Math.min(.5,t*.25):Math.max(.035,.5-state.phaseTime*.31));
     // A slow dolly that reveals the spiral's depth before settling under the name.
-    const flight=easeInOut(t/4.6);
+    const flight=state.phase==='galaxy'?easeInOut(t/4.6):1;
     camera.position.set(Math.sin(t*.18)*.42*(1-flight),THREE.MathUtils.lerp(4.4,1.1,flight),THREE.MathUtils.lerp(-.2,7.5,flight));
     const look=new THREE.Vector3(0,THREE.MathUtils.lerp(.4,.7,flight),THREE.MathUtils.lerp(-5,1.2,flight));camera.lookAt(look);
     if(state.phase==='galaxy'){
       meteors.forEach(m=>{const local=(t-m.userData.start)%7;if(local>=0&&local<.8){m.visible=true;m.position.set(m.userData.x-local*3,m.userData.y-local*1.6,m.userData.z);m.material.opacity=Math.sin(local/.8*Math.PI)*.6;}else m.visible=false;});
-      if(t>4.6){setPhase('name');nameParticles.visible=true;$('chapter').classList.add('hidden');}
+      if(t>4.6){setPhase('name');nameParticles.visible=true;galaxy.position.z=-9;galaxy.userData.glow.position.z=-9;$('chapter').classList.add('hidden');}
     }else{
       meteors.forEach(m=>m.visible=false);
       const progress=state.phase==='name'?Math.min(1.25,t/2.6):1.25;
