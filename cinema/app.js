@@ -23,7 +23,7 @@
     giftOpened: false, explosionFired: false, blessingFired: false,
     particlesFired: 0, hapticsFired: false, orientationSwitches: 0
   };
-  let expiryTimer = 0, loadTimer = 0, resumeAfterOrientation = false;
+  let expiryTimer = 0, resumeAfterOrientation = false;
   let particles = [], raf = 0, lastFrame = 0;
 
   function setHidden(id, hidden) { $(id).classList.toggle('hidden', hidden); }
@@ -48,7 +48,6 @@
   }
   function showError(event) {
     if (state.phase === 'gate' && !film.getAttribute('src')) return;
-    clearTimeout(loadTimer);
     setHidden('loading', true);
     setHidden('error', false);
     $('error-detail').textContent = '影片暂时未能载入，请检查网络后重试。';
@@ -57,7 +56,6 @@
   }
 
   async function begin() {
-    clearTimeout(loadTimer);
     setHidden('error', true); setHidden('gate', true); setHidden('expired', true); setHidden('finale', true); setHidden('opening', false); setHidden('sound', false);
     state.phase = 'intro'; state.startedAt = performance.now(); state.expired = false;
     state.waiting = false; state.giftOpened = false; state.explosionFired = false; state.blessingFired = false;
@@ -78,17 +76,22 @@
   function onTime() {
     if (state.expired || state.phase === 'gate' || state.phase === 'error') return;
     const t = film.currentTime;
-    if (!state.giftOpened && t >= 13.6) {
+    if (!state.giftOpened && t >= 5.7) {
       if (!state.waiting) {
         state.waiting = true; state.phase = 'waiting'; film.pause();
         setHidden('tap-prompt', false); setHidden('gift-hit', false);
       }
     }
-    if (state.giftOpened && t >= 23.25 && !state.explosionFired) explode();
-    if (t >= 48.5 && !state.blessingFired) {
+    if (state.giftOpened && t >= 10.35 && !state.explosionFired) explode();
+    if (t >= 22.2 && !state.blessingFired) {
       state.blessingFired = true; state.phase = 'finale'; setHidden('finale', false);
     }
-    if (t >= Math.min(59.8, film.duration || 60)) expire();
+    if (film.ended && !state.expired) {
+      state.phase = 'finale';
+      setHidden('finale', false);
+      setHidden('opening', true);
+      setHidden('sound', true);
+    }
   }
 
   function openGift() {
@@ -178,7 +181,7 @@
   film.addEventListener('waiting', () => { if (state.phase !== 'gate' && !state.waiting && !state.expired) setHidden('loading', false); });
   film.addEventListener('playing', () => setHidden('loading', true));
   film.addEventListener('canplay', () => setHidden('loading', true));
-  film.addEventListener('ended', expire);
+  film.addEventListener('ended', onTime);
   film.addEventListener('error', showError);
   document.addEventListener('visibilitychange', () => {
     if (document.hidden && !film.paused) { film.pause(); resumeAfterOrientation = true; }
