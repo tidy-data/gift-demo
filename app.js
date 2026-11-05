@@ -165,7 +165,7 @@ function createName(){
     const color=new THREE.Color().setHSL(rand(.09,.17),rand(.12,.43),rand(.72,1));color.multiplyScalar(rand(1.1,2));color.toArray(colors,i*3);sizes[i]=rand(.9,2.2);
   }
   const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(start,3));geo.setAttribute('aTarget',new THREE.BufferAttribute(target,3));geo.setAttribute('color',new THREE.BufferAttribute(colors,3));geo.setAttribute('aSize',new THREE.BufferAttribute(sizes,1));
-  const mat=new THREE.ShaderMaterial({uniforms:{uTime:{value:0},uProgress:{value:0},uOpacity:{value:0},uPixel:{value:renderer.getPixelRatio()}},vertexShader:`attribute vec3 aTarget;attribute vec3 color;attribute float aSize;uniform float uTime;uniform float uProgress;uniform float uPixel;varying vec3 vColor;void main(){float p=clamp((uProgress-length(position.xy)*.022),0.,1.);p=p*p*(3.-2.*p);vec3 pos=mix(position,aTarget,p);pos.x+=sin(uTime*.8+aTarget.y*8.)*.012*(1.-p);vec4 mv=modelViewMatrix*vec4(pos,1.);gl_PointSize=min(9.,aSize*uPixel*(30./-mv.z));gl_Position=projectionMatrix*mv;vColor=color;}`,fragmentShader:`uniform float uOpacity;varying vec3 vColor;void main(){float d=length(gl_PointCoord-.5);if(d>.5)discard;float a=exp(-d*d*17.);gl_FragColor=vec4(vColor*1.5,a*uOpacity);}`,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending});
+  const mat=new THREE.ShaderMaterial({uniforms:{uTime:{value:0},uProgress:{value:0},uOpacity:{value:0},uPixel:{value:renderer.getPixelRatio()}},vertexShader:`attribute vec3 aTarget;attribute vec3 color;attribute float aSize;uniform float uTime;uniform float uProgress;uniform float uPixel;varying vec3 vColor;void main(){float p=clamp((uProgress-length(position.xy)*.022),0.,1.);p=p*p*(3.-2.*p);vec3 pos=mix(position,aTarget,p);pos.x+=sin(uTime*.8+aTarget.y*8.)*.012*(1.-p);vec4 mv=modelViewMatrix*vec4(pos,1.);gl_PointSize=min(6.,aSize*uPixel*(15./-mv.z));gl_Position=projectionMatrix*mv;vColor=color;}`,fragmentShader:`uniform float uOpacity;varying vec3 vColor;void main(){float d=length(gl_PointCoord-.5);if(d>.5)discard;float a=exp(-d*d*17.);gl_FragColor=vec4(vColor*.64,a*uOpacity*.8);}`,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending});
   nameParticles=new THREE.Points(geo,mat);nameParticles.visible=false;scene.add(nameParticles);
 }
 async function accept(){
@@ -281,14 +281,14 @@ function animate(now){
     fragments.forEach(m=>{if(m.material.opacity>0){m.position.addScaledVector(m.userData.velocity,dt);m.material.opacity=Math.max(0,m.material.opacity-dt*1.4);}});
     if(shockwave)shockwave.visible=false;
     const p=Math.min(1,t/5);
-    galaxy.material.uniforms.uOpacity.value=(state.phase==='galaxy'?Math.min(1,t*.7):Math.max(.17,1-state.phaseTime*.52));galaxy.userData.glow.material.opacity=(state.phase==='galaxy'?Math.min(.5,t*.25):Math.max(.035,.5-state.phaseTime*.31));
+    galaxy.material.uniforms.uOpacity.value=(state.phase==='galaxy'?Math.min(1,t*.7):Math.max(.08,.52-state.phaseTime*.4));galaxy.userData.glow.material.opacity=(state.phase==='galaxy'?Math.min(.35,t*.2):0);
     // A slow dolly that reveals the spiral's depth before settling under the name.
     const flight=state.phase==='galaxy'?easeInOut(t/4.6):1;
     camera.position.set(Math.sin(t*.18)*.42*(1-flight),THREE.MathUtils.lerp(4.4,1.1,flight),THREE.MathUtils.lerp(-.2,7.5,flight));
     const look=new THREE.Vector3(0,THREE.MathUtils.lerp(.4,.7,flight),THREE.MathUtils.lerp(-5,1.2,flight));camera.lookAt(look);
     if(state.phase==='galaxy'){
       meteors.forEach(m=>{const local=(t-m.userData.start)%7;if(local>=0&&local<.8){m.visible=true;m.position.set(m.userData.x-local*3,m.userData.y-local*1.6,m.userData.z);m.material.opacity=Math.sin(local/.8*Math.PI)*.6;}else m.visible=false;});
-      if(t>4.6){setPhase('name');nameParticles.visible=true;galaxy.position.z=-9;galaxy.userData.glow.position.z=-9;$('chapter').classList.add('hidden');}
+      if(t>4.6){setPhase('name');nameParticles.visible=true;galaxy.position.z=-22;galaxy.scale.setScalar(.55);galaxy.userData.glow.position.z=-22;$('chapter').classList.add('hidden');}
     }else{
       meteors.forEach(m=>m.visible=false);
       const progress=state.phase==='name'?Math.min(1.25,t/2.6):1.25;
