@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#02030a" />
+  <meta name="description" content="一份穿越星河而来的礼物。A little universe, just for you." />
+  <title>予你星河 · A little universe, for you</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%23e5ca94' d='M32 2l6 24 24 6-24 6-6 24-6-24-24-6 24-6z'/%3E%3C/svg%3E" />
+  <link rel="preload" href="./assets/serif-cjk.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="./style.css" />
+  <script type="importmap">{"imports":{"three":"./vendor/three/three.module.js","three/addons/":"./vendor/three/addons/"}}</script>
+</head>
+<body>
+  <main id="experience" aria-label="星河惊喜礼物 Cinematic galaxy gift">
+    <canvas id="stage" aria-label="互动三维礼物"></canvas>
+    <div class="cinema-shade" aria-hidden="true"></div>
+    <div id="flash" aria-hidden="true"></div>
+    <section id="intro" class="screen intro">
+      <div class="constellation-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+      <p class="eyebrow">A LITTLE UNIVERSE, FOR YOU</p>
+      <h1>你收到一份礼物</h1>
+      <p class="english-title">You have received a gift</p>
+      <div class="hairline"><span></span><b>✦</b><span></span></div>
+      <p class="intro-note">有些心意，值得用一整片星河来诉说</p>
+      <button id="accept" class="primary"><span>接受礼物</span><small>ACCEPT GIFT</small><i aria-hidden="true">→</i></button>
+      <p class="sound-note"><span class="sound-icon">♪</span> 建议开启声音 · Best with sound</p>
+    </section>
+    <section id="opening" class="screen opening hidden" aria-live="polite">
+      <div class="scene-caption"><span>SOMETHING SPECIAL</span><p>为你而来</p></div>
+      <div id="prompt" class="prompt hidden"><p>点击礼物</p><span>TAP THE BOX</span><i></i></div>
+      <button id="gift-target" class="gift-target hidden" aria-label="点击打开礼物 Tap to open the gift"></button>
+      <div id="timer" class="timer hidden" aria-label="礼物倒计时"><svg viewBox="0 0 44 44"><circle class="timer-track" cx="22" cy="22" r="19"/><circle id="timer-progress" cx="22" cy="22" r="19"/></svg><span id="timer-number">60</span></div>
+    </section>
+    <section id="chapter" class="chapter hidden" aria-hidden="true"><span>CHAPTER I</span><h2>星河降临</h2><p>THE GALAXY DESCENDS</p></section>
+    <section id="finale" class="screen finale hidden">
+      <div class="finale-star" aria-hidden="true">✦</div>
+      <p class="eyebrow">A UNIVERSE OF GOOD WISHES</p>
+      <p id="message" class="message"></p>
+      <div class="hairline"><span></span><b>✦</b><span></span></div>
+      <p id="from" class="from"></p>
+      <button id="replay" class="secondary">↻&nbsp; 再感受一次 <span>REPLAY</span></button>
+    </section>
+    <section id="expired" class="screen expired hidden" aria-live="assertive">
+      <div class="expired-star">✧</div><h2>星光暂时离开了</h2>
+      <p>这份礼物已过期，请让送礼人重新发送。</p><small>This gift has faded. Ask the sender to send it again.</small>
+      <button id="restart" class="secondary">重新查看 <span>REOPEN</span></button>
+    </section>
+    <button id="sound-toggle" class="sound-toggle hidden" aria-label="关闭声音 Mute sound" aria-pressed="false"><span>♪</span></button>
+    <div id="toast" class="toast hidden" role="status"></div>
+    <div id="loading" class="loading"><span></span><p>正在点亮星光</p></div>
+    <div id="fallback" class="screen fallback hidden"><h1>你收到一份礼物</h1><p id="fallback-message"></p><p id="fallback-from"></p><button onclick="location.reload()" class="secondary">重试 RETRY</button></div>
+  </main>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
