@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#02050e">
+  <meta name="description" content="一份穿越星河而来的全屏电影礼物。">
+  <title>予你星河 · 全屏电影礼物</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%23ead09a' d='M32 2l6 24 24 6-24 6-6 24-6-24-24-6 24-6z'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main id="experience" aria-label="全屏星河惊喜礼物">
+    <video id="film" playsinline webkit-playsinline preload="auto" muted aria-label="星河电影特效"></video>
+    <div class="shade" aria-hidden="true"></div>
+    <div id="shake">
+      <canvas id="particles" aria-hidden="true"></canvas>
+      <div id="flash" aria-hidden="true"></div>
+    </div>
+
+    <section id="gate" class="screen gate">
+      <div class="orb" aria-hidden="true"><i></i><b>✦</b></div>
+      <p class="eyebrow">A LITTLE UNIVERSE, FOR YOU</p>
+      <h1>你收到一份礼物</h1>
+      <p class="sub">有些心意，值得用一整片星河来诉说</p>
+      <button id="begin" class="primary"><span>轻触开启</span><small>OPEN YOUR GIFT</small></button>
+      <p class="hint">建议开启声音 · 全屏体验</p>
+    </section>
+
+    <section id="opening" class="screen opening hidden" aria-live="polite">
+      <div id="tap-prompt" class="tap-prompt hidden">
+        <span>轻触礼盒，唤醒星河</span><small>TAP TO UNWRAP THE UNIVERSE</small><i></i>
+      </div>
+      <button id="gift-hit" class="gift-hit hidden" aria-label="轻触礼盒开启礼物"></button>
+    </section>
+
+    <section id="finale" class="screen finale hidden" aria-live="polite">
+      <div class="finale-copy">
+        <span class="star" aria-hidden="true">✦</span>
+        <p class="eyebrow">A UNIVERSE OF GOOD WISHES</p>
+        <p id="blessing" class="blessing">愿你被这个世界温柔以待</p>
+        <div class="line" aria-hidden="true"></div>
+        <p class="wish">愿此刻的星光，照亮往后的每一天</p>
+      </div>
+      <button id="replay" class="secondary">↻&nbsp; 再感受一次</button>
+    </section>
+
+    <section id="expired" class="screen expired hidden" aria-live="assertive">
+      <span class="star" aria-hidden="true">✧</span>
+      <h2>星光暂时离开了</h2>
+      <p>这份礼物的此刻已经落幕</p>
+      <button id="reopen" class="secondary">重新开启</button>
+    </section>
+
+    <section id="error" class="screen error hidden" role="alert">
+      <h2>星光正在路上</h2><p id="error-detail">影片暂时未能载入，请检查网络后重试。</p>
+      <button id="retry" class="primary"><span>重新载入</span></button>
+    </section>
+
+    <button id="sound" class="sound hidden" aria-label="关闭声音" aria-pressed="false">♪</button>
+    <div id="loading" class="loading hidden" role="status"><i></i><span>正在点亮星光</span></div>
+  </main>
+  <script src="./app.js"></script>
+</body>
+</html>
