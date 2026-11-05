@@ -3,16 +3,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-  <meta name="theme-color" content="#02050e">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="予你星河">
   <meta name="description" content="一份穿越星河而来的全屏电影礼物。">
   <title>予你星河 · 全屏电影礼物</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='%23ead09a' d='M32 2l6 24 24 6-24 6-6 24-6-24-24-6 24-6z'/%3E%3C/svg%3E">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
   <link rel="stylesheet" href="./style.css">
 </head>
 <body>
   <main id="experience" aria-label="全屏星河惊喜礼物">
     <video id="film" playsinline webkit-playsinline preload="auto" muted aria-label="星河电影特效"></video>
     <div class="shade" aria-hidden="true"></div>
+    <canvas id="gift-canvas" aria-label="可点击打开的实时三维礼盒"></canvas>
     <div id="shake">
       <canvas id="particles" aria-hidden="true"></canvas>
       <div id="flash" aria-hidden="true"></div>
@@ -29,7 +36,7 @@
 
     <section id="opening" class="screen opening hidden" aria-live="polite">
       <div id="tap-prompt" class="tap-prompt hidden">
-        <span>轻触礼盒，唤醒星河</span><small>TAP TO UNWRAP THE UNIVERSE</small><i></i>
+        <span id="tap-label">连续轻触礼盒 · 唤醒星河</span><small id="tap-count">TAP TO CRACK · 0 / 3</small><i></i>
       </div>
       <button id="gift-hit" class="gift-hit hidden" aria-label="轻触礼盒开启礼物"></button>
     </section>
@@ -58,8 +65,9 @@
     </section>
 
     <button id="sound" class="sound hidden" aria-label="关闭声音" aria-pressed="false">♪</button>
+    <div id="ios-hint" class="ios-hint hidden" role="status">用 Safari 分享菜单「添加到主屏幕」，即可真正全屏打开</div>
     <div id="loading" class="loading hidden" role="status"><i></i><span>正在点亮星光</span></div>
   </main>
-  <script src="./app.js"></script>
+  <script type="module" src="./app.js"></script>
 </body>
 </html>

@@ -1,8 +1,10 @@
 # 予你星河 · Cinematic surprise gift
 
-Open **[/cinema/](https://tidy-data.github.io/gift-demo/cinema/)** for the current 30-second full-screen interactive prototype.
+Open **[/cinema/](https://tidy-data.github.io/gift-demo/cinema/)** for the current true-fullscreen, real-time interactive prototype.
 
-- Pre-rendered original AI shots, no player controls or borders.
+- True Fullscreen API request on the opening tap; fullscreen PWA and iOS home-screen fallback.
+- Real-time Three.js gift: three taps to crack and open, touch sparks, device/finger parallax, particle-formed blessing.
+- Pre-rendered original AI shots are used only as the backdrop, with no player controls or borders.
 - Portrait phone and landscape desktop masters; no black bars.
 - Tap-to-open, screen shake, canvas particles, original procedural score, optional Android haptics.
 - No recipient/sender fields, no name parameters, no tracking.
